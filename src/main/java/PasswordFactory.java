@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PasswordFactory {
     private static final String CAPITAL_CASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -17,7 +19,7 @@ public class PasswordFactory {
         String password = new String();
 
         while (password.length() < length) {
-            password += PASSWORD_CHARACTERS.charAt(rand.nextInt(PASSWORD_CHARACTERS.length()));
+            password += PASSWORD_CHARACTERS.charAt(rand.nextInt(PASSWORD_CHARACTERS.length() - 1));
         }
 
         password = checkPassword(password);
@@ -27,9 +29,19 @@ public class PasswordFactory {
 
     private static String checkPassword(String password) {
 
-        /**TODO:
-         * implement check for each category of symbols and if missing add one at random place and check again
-        **/
+        boolean approved = false;
+
+        System.out.println("Password: " + password);
+
+        while (!approved) {
+            for(char c : CAPITAL_CASE_LETTERS.toCharArray()) {
+                approved = password.chars().mapToObj(w -> (char)w).collect(Collectors.toSet()).contains(c);
+                System.out.println("Password contains %s character: %b".formatted(c, approved));
+
+                if(approved) break;
+            }
+
+        }
         return password;
     }
 }
